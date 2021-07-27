@@ -5,6 +5,7 @@ import "./App.css";
 import { Box, ChakraProvider, extendTheme } from "@chakra-ui/react";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
+import { Search } from "./pages/Search";
 
 // 2. Extend the theme to include custom colors, fonts, etc
 const colors = {
@@ -23,7 +24,8 @@ function App() {
         <Switch>
           {/* <Box minH="100%" w="3px" bg="black"></Box> */}
           {/* <Layout> */}
-          <Route exact path="/" component={() => <Home />} />
+          <Route exact path="/" component={Home} />
+          <Route exact path="/search" component={Search} />
           {/* </Layout> */}
           {/* <Route exact path="/" component={() => <Home />} /> */}
         </Switch>

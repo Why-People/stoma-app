@@ -2,11 +2,7 @@ import express, { Request, Response } from "express";
 import Router from "express-promise-router";
 import { query, validationResult } from "express-validator";
 import axios, { AxiosResponse } from "axios";
-import {
-  StomaPriceRating,
-  StomaApiResponse,
-  StomaBusinessIndex,
-} from "./types";
+import { StomaPriceRating, StomaApiResponse } from "./types";
 import Redis from "ioredis";
 import { YelpApiResponse, YelpBusiness, YelpPrice } from "./yelpTypes";
 require("dotenv").config();
@@ -15,7 +11,7 @@ const app = express();
 const router = Router();
 const redis = new Redis(process.env.REDIS_URL);
 app.use(router);
-const port = 5000;
+const port = 8080;
 
 const maxBusinesses = 1000;
 const cacheTime = 1 * 60 * 10; // 10 minutes
@@ -34,16 +30,12 @@ const stomaPriceMap: Record<YelpPrice, StomaPriceRating> = {
   [YelpPrice.VeryExpensive]: StomaPriceRating.VeryExpensive,
 };
 
-const getPriceRating = (
-  yelpPrice: YelpPrice | undefined
-): StomaPriceRating | null => {
+const getPriceRating = (yelpPrice: YelpPrice | undefined) => {
   if (!yelpPrice) return null;
   return stomaPriceMap[yelpPrice];
 };
 
-const formatRestaurantListing = (
-  yelpBusiness: YelpBusiness
-): StomaApiResponse => {
+const formatRestaurantListing = (yelpBusiness: YelpBusiness) => {
   const categories: string[] = yelpBusiness.categories.map(
     (category: any) => category.title
   );
@@ -67,7 +59,7 @@ const fetchYelpData = async (
   location: string,
   offset: number,
   redisKey: string
-): Promise<YelpApiResponse> => {
+) => {
   // Try to get from cache
   const cachedData = await redis.get(redisKey);
   if (cachedData) {
