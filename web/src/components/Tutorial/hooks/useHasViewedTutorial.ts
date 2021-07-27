@@ -1,5 +1,5 @@
-import { UseToggleValue } from "../lib/types";
-import { useToggle } from "./useToggle";
+import { UseToggleValue } from "../../../lib/types";
+import { useToggle } from "../../../hooks/useToggle";
 
 const STORAGE_KEY = "viewedTutorial";
 

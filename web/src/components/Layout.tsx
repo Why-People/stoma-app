@@ -1,15 +1,16 @@
-import { Box } from "@chakra-ui/layout";
+import { Flex } from "@chakra-ui/layout";
 import React from "react";
-
-// interface LayoutProps {
-//     children: react
-// }
 
 const Layout: React.FC = ({ children }) => {
   return (
-    <Box mt={8} mx="auto" maxW="1200px" w="100%">
+    <Flex
+      align="center"
+      justify="center"
+      direction="column"
+      // maxW="95%"
+      minH="70vh">
       {children}
-    </Box>
+    </Flex>
   );
 };
 

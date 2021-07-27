@@ -1,8 +1,8 @@
 import express, { Request, Response } from "express";
 import Router from "express-promise-router";
 import { query, validationResult } from "express-validator";
-import axios, { AxiosResponse } from "axios";
-import { StomaPriceRating, StomaApiResponse } from "./types";
+import axios from "axios";
+import { StomaPriceRating } from "./types";
 import Redis from "ioredis";
 import { YelpApiResponse, YelpBusiness, YelpPrice } from "./yelpTypes";
 require("dotenv").config();

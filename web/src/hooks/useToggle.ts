@@ -2,7 +2,7 @@ import { useState } from "react";
 import Toggle from "../lib/Toggle";
 import { UseToggleValue } from "../lib/types";
 
-// useBoolean-like hook that allows for a more OOP approach
+// useBoolean-like hook
 export const useToggle = (
   initialValue: boolean,
   toggleFn?: (value: boolean) => void

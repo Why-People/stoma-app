@@ -1,4 +1,3 @@
 #!/bin/sh
-# This is a comment!
-echo Starting Redis	# This is a comment, too!
+echo Starting Redis
 redis-server & npm run serve
