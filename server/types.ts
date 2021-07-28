@@ -12,7 +12,21 @@ export interface StomaBusinessIndex {
   index: number;
 }
 
+export type StomaResponse = [StomaApiResponse, StomaErrorResponse];
+
 export interface StomaApiResponse {
+  businesses: StomaBusiness[];
+  pageLength: number;
+  total: number;
+  offset: number;
+}
+
+export interface StomaErrorResponse {
+  error: string;
+  message: string;
+}
+
+export interface StomaBusiness {
   yelpId: string;
   name: string;
   address: string[];

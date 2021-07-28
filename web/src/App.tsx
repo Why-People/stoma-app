@@ -1,11 +1,14 @@
 import axios from "axios";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "./App.css";
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
-import Home from "./pages/Home";
+import { ChakraProvider, extendTheme, Text } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { Search } from "./pages/Search";
 import { LocationContextProvider } from "./components/Location/LocationContextProvider";
+import { lazy, Suspense } from "react";
+
+const Home = lazy(() => import("./pages/Home"));
+const Search = lazy(() => import("./pages/Search"));
+const Result = lazy(() => import("./pages/Result"));
 
 axios.defaults.baseURL = process.env.REACT_APP_STOMA_API_BASE_URL;
 
@@ -26,16 +29,19 @@ const App = () => {
     <ChakraProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
         <LocationContextProvider>
-          <Router>
-            <Switch>
-              {/* <Box minH="100%" w="3px" bg="black"></Box> */}
-              {/* <Layout> */}
-              <Route exact path="/" component={Home} />
-              <Route exact path="/search" component={Search} />
-              {/* </Layout> */}
-              {/* <Route exact path="/" component={() => <Home />} /> */}
-            </Switch>
-          </Router>
+          <Suspense fallback={<Text>Loading...</Text>}>
+            <Router>
+              <Switch>
+                {/* <Box minH="100%" w="3px" bg="black"></Box> */}
+                {/* <Layout> */}
+                <Route exact path="/" component={Home} />
+                <Route exact path="/search" component={Search} />
+                <Route exact path="/results/:location" component={Result} />
+                {/* </Layout> */}
+                {/* <Route exact path="/" component={() => <Home />} /> */}
+              </Switch>
+            </Router>
+          </Suspense>
         </LocationContextProvider>
       </QueryClientProvider>
     </ChakraProvider>

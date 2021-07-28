@@ -1,20 +1,27 @@
 import express, { Request, Response } from "express";
+import cors from "cors";
 import Router from "express-promise-router";
 import { query, validationResult } from "express-validator";
 import axios from "axios";
-import { StomaPriceRating } from "./types";
+import { StomaApiResponse, StomaPriceRating } from "./types";
 import Redis from "ioredis";
 import { YelpApiResponse, YelpBusiness, YelpPrice } from "./yelpTypes";
 require("dotenv").config();
 
+const corsConfig = {
+  origin: "http://localhost:3000",
+};
+
 const app = express();
+// const corsObj = cors(corsConfig);
 const router = Router();
 const redis = new Redis(process.env.REDIS_URL);
 app.use(router);
-const port = 8080;
+// app.use(corsObj);
+const port = process.env.SERVER_PORT;
 
-const maxBusinesses = 1000;
-const cacheTime = 1 * 60 * 10; // 10 minutes
+const maxBusinesses = 1000; // Yelp only allows upto 1000 results to be fetched through pagination
+const cacheTime = 1 * 60 * 20; // 20 minutes
 
 axios.defaults.headers["Authorization"] = `Bearer ${process.env.YELP_KEY}`;
 axios.defaults.params = {
@@ -35,6 +42,7 @@ const getPriceRating = (yelpPrice: YelpPrice | undefined) => {
   return stomaPriceMap[yelpPrice];
 };
 
+// Yelp Api Response -> Stoma Response
 const formatRestaurantListing = (yelpBusiness: YelpBusiness) => {
   const categories: string[] = yelpBusiness.categories.map(
     (category: any) => category.title
@@ -55,18 +63,23 @@ const formatRestaurantListing = (yelpBusiness: YelpBusiness) => {
   };
 };
 
-const fetchYelpData = async (
-  location: string,
-  offset: number,
-  redisKey: string
-) => {
+const getCacheKey = (location: string, offset: number) => {
+  // Try to make "very" similar keys match
+  // Eg. A user may input "san francisco" another may input "San Francisco"
+  // Those 2 keys would return the same response, so only 1 cache key is needed for both
+  const locationKey = location.replace(/[ ]+/, "_").toLowerCase();
+  return `remainingBusinesses::${locationKey}::${offset}`;
+};
+
+const fetchStomaData = async (location: string, offset: number) => {
+  const cacheKey = getCacheKey(location, offset);
   // Try to get from cache
-  const cachedData = await redis.get(redisKey);
+  const cachedData = await redis.get(cacheKey);
   if (cachedData) {
-    return JSON.parse(cachedData) as YelpApiResponse;
+    return JSON.parse(cachedData) as StomaApiResponse;
   }
 
-  return await axios
+  const yelpData = await axios
     .get<YelpApiResponse>("https://api.yelp.com/v3/businesses/search", {
       params: {
         location: location,
@@ -74,12 +87,27 @@ const fetchYelpData = async (
       },
     })
     .then((resp) => resp.data);
+
+  const stomaData: StomaApiResponse = {
+    businesses: yelpData.businesses.map((yelpBusiness) =>
+      formatRestaurantListing(yelpBusiness)
+    ),
+    pageLength: yelpData.businesses.length,
+    total: yelpData.total > maxBusinesses ? maxBusinesses : yelpData.total,
+    offset: offset,
+  };
+
+  // Cache data for 10 minutes
+  await redis.set(cacheKey, JSON.stringify(stomaData), "ex", cacheTime);
+
+  return stomaData;
 };
 
 router.get(
   "/api/search",
   query("location").isString(),
   query("offset").isNumeric(),
+  cors(corsConfig),
   async (req: Request, res: Response) => {
     // Validate Request params
     const errors = validationResult(req);
@@ -89,37 +117,19 @@ router.get(
         .json({ message: "Invalid Request Params", errors: errors.array() });
     }
 
+    console.log("req");
+
     const location = req.query.location as string;
     const offset = req.query.offset as string;
-    const redisKey = `remainingBusinesses::${location}::${offset}`;
 
-    const yelpBusinessData = await fetchYelpData(
-      location,
-      parseInt(offset),
-      redisKey
-    );
-
-    // Select random business
-    const index = Math.floor(
-      Math.random() * yelpBusinessData.businesses.length
-    );
-    const selectedBusiness = yelpBusinessData.businesses[index];
-
-    // Cache data for 10 minutes
-    await redis.set(
-      redisKey,
-      JSON.stringify(yelpBusinessData),
-      "ex",
-      cacheTime
-    );
-
-    res.status(200).json({
-      result: formatRestaurantListing(selectedBusiness),
-      found:
-        yelpBusinessData.total > maxBusinesses
-          ? maxBusinesses
-          : yelpBusinessData.total,
-    });
+    try {
+      res.status(200).json(await fetchStomaData(location, parseInt(offset)));
+    } catch (err) {
+      console.log(err);
+      res
+        .status(400)
+        .json({ error: "DataFetchError", message: "Failed to fetch Data" });
+    }
   }
 );
 

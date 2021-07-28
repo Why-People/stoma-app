@@ -1,3 +1,3 @@
 #!/bin/sh
 echo Starting Redis
-redis-server & npm run serve
+npm run serve & gnome-terminal "redis-server"

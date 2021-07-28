@@ -15,15 +15,15 @@ import { TutorialModal } from "../components/Tutorial/TutorialModal";
 import { useHasViewedTutorial } from "../components/Tutorial/hooks/useHasViewedTutorial";
 import { Formik, Form, Field, FieldProps } from "formik";
 import Layout from "../components/Layout";
-import { useLocationQuery } from "../components/Location/hooks/useLocationQuery";
+import { useLocationQueryParam } from "../components/Location/hooks/useLocationQuery";
 import { useHistory } from "react-router";
 
-export const Search = () => {
+const Search = () => {
   const history = useHistory();
   const closeRef = useRef() as RefObject<any> | undefined;
   const [hasViewedTutorial, setHasViewedTutorial] = useHasViewedTutorial();
   const [isLargerThan769] = useMediaQuery("(min-width: 769px)");
-  const { setLocation } = useLocationQuery();
+  const { setLocation } = useLocationQueryParam();
   return (
     <Layout>
       <TutorialContextProvider>
@@ -50,7 +50,7 @@ export const Search = () => {
           }
           values.location = values.location.replace(/[[\]|{}^`"<>\\]+/, "");
           setLocation(values.location);
-          history.push("/results");
+          history.push(`/results/${values.location}`);
         }}>
         {() => (
           <Form>
@@ -90,3 +90,5 @@ export const Search = () => {
     </Layout>
   );
 };
+
+export default Search;
