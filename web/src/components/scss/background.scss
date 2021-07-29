@@ -1,0 +1,36 @@
+@use "sass:math";
+
+* :not(.particle) {
+  z-index: 1;
+}
+
+.particle {
+  position: absolute;
+  z-index: 0;
+  border-radius: 50%;
+}
+
+@function getTranslate() {
+  @return translate((random(90) * 1vw), (random(90) * 1vh));
+}
+
+@for $i from 1 through 100 {
+  @keyframes particle-motion-#{$i} {
+    from {
+      transform: getTranslate();
+    }
+    to {
+      transform: getTranslate();
+    }
+  }
+
+  .particle:nth-child(#{$i}) {
+    animation: particle-motion-#{$i} 30s infinite;
+    animation-delay: -$i * 0.3s;
+    $size: random(5) + 5 + px;
+    opacity: math.random();
+    height: $size;
+    width: $size;
+    background: hsl(random(360), 70%, 50%);
+  }
+}

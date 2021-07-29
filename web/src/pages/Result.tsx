@@ -1,13 +1,22 @@
 import { Heading, Text } from "@chakra-ui/layout";
-import { Button, Image, Spinner, VStack, AspectRatio } from "@chakra-ui/react";
+import {
+  Button,
+  Image,
+  Spinner,
+  VStack,
+  AspectRatio,
+  Link,
+} from "@chakra-ui/react";
 import React from "react";
 import { useParams } from "react-router";
+import { useHistory } from "react-router-dom";
 import Layout from "../components/Layout";
 import { useBusinessQuery } from "../hooks/useBusinessQuery";
 
 const Result = () => {
   const { location } = useParams() as any;
-  const businessesQuery = useBusinessQuery(location, 0);
+  const history = useHistory();
+  const businessesQuery = useBusinessQuery(location);
   const business = businessesQuery?.data;
 
   if (businessesQuery.isLoading) {
@@ -34,6 +43,14 @@ const Result = () => {
         isLoading={businessesQuery.isLoading}
         onClick={() => businessesQuery.refetch()}>
         Next
+      </Button>
+      <Button
+        mt={10}
+        as={Link}
+        colorScheme="blue"
+        isLoading={businessesQuery.isLoading}
+        onClick={() => history.push("/search")}>
+        Switch Location
       </Button>
     </Layout>
   );

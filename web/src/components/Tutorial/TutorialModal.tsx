@@ -7,7 +7,6 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/modal";
-import { Box } from "@chakra-ui/react";
 import React, { RefObject } from "react";
 import { useCloseTutorial } from "./hooks/useCloseTutorial";
 import { TutorialBody } from "./TutorialBody";

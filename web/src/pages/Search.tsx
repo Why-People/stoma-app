@@ -1,14 +1,17 @@
-import { Button } from "@chakra-ui/button";
+import { Button, IconButton } from "@chakra-ui/button";
 import { Heading } from "@chakra-ui/layout";
 import {
   FormControl,
   FormErrorMessage,
   FormLabel,
   Input,
+  InputGroup,
+  InputRightAddon,
+  InputRightElement,
   Stack,
   useMediaQuery,
 } from "@chakra-ui/react";
-import { RefObject, useRef } from "react";
+import React, { RefObject, useRef } from "react";
 import { TutorialContextProvider } from "../components/Tutorial/TutorialContextProvider";
 import { TutorialDrawer } from "../components/Tutorial/TutorialDrawer";
 import { TutorialModal } from "../components/Tutorial/TutorialModal";
@@ -17,6 +20,7 @@ import { Formik, Form, Field, FieldProps } from "formik";
 import Layout from "../components/Layout";
 import { useLocationQueryParam } from "../components/Location/hooks/useLocationQuery";
 import { useHistory } from "react-router";
+import { SearchIcon } from "@chakra-ui/icons";
 
 const Search = () => {
   const history = useHistory();
@@ -60,19 +64,34 @@ const Search = () => {
               </Heading>
               <Field name="location">
                 {({ field, form }: FieldProps) => {
-                  console.log(field, form);
+                  // console.log(field, form);
                   return (
                     <FormControl
                       size="lg"
                       w={["260px", "400px", "450px", "500px", "550px"]}
                       isInvalid={!!form.errors.location}>
                       <FormLabel htmlFor="location"></FormLabel>
-                      <Input
-                        {...field}
-                        ref={closeRef}
-                        id="location"
-                        placeholder="location"
-                      />
+                      <InputGroup size="lg" id="location">
+                        <Input
+                          {...field}
+                          ref={closeRef}
+                          placeholder="location"
+                        />
+                        <InputRightAddon children=".com" />
+                        <InputRightElement>
+                          {/* <IconButton
+                            aria-label="Find place to eat"
+                            icon={<SearchIcon />}
+                          /> */}
+                          <Button
+                            mt={4}
+                            w="50%"
+                            colorScheme="blue"
+                            type="submit">
+                            Submit
+                          </Button>
+                        </InputRightElement>
+                      </InputGroup>
                       <FormErrorMessage>
                         {form.errors.location}
                       </FormErrorMessage>

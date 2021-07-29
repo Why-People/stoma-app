@@ -3,11 +3,16 @@ import { useQuery, useQueryClient } from "react-query";
 import { StomaApiResponse, StomaBusiness } from "../lib/types";
 
 const getLocationKey = (location: string) => {
-  return ["location", location.replace(/[[\]|{}^`"<>\\]+/, "").toLowerCase()];
+  return [
+    "location",
+    location
+      .replace(/[[\]|{}^`"<>\\]+/, "")
+      .replace(/[ ,]+/g, "_")
+      .toLowerCase(),
+  ];
 };
 
-const useFullResultsQuery = (location: string, offset: number) => {
-  // const [isLastPage, setIsLastPage] = useToggle(false);
+const useFullResultsQuery = (location: string) => {
   const queryClient = useQueryClient();
   const locationKey = getLocationKey(location);
   return useQuery(
@@ -16,26 +21,25 @@ const useFullResultsQuery = (location: string, offset: number) => {
       const queryData = queryClient.getQueryData(locationKey) as
         | StomaApiResponse
         | undefined;
-
-      if (!queryData || queryData.businesses.length === 0) {
-        const isDone =
-          !!queryData &&
-          (queryData.pageLength < 50 || queryData.offset + 50 === 1000);
-        if (isDone) {
-          throw new Error("Done fetching");
-        }
-
-        return await axios
-          .get<StomaApiResponse>("/api/search", {
-            params: {
-              location: location,
-              offset: !!queryData ? queryData.offset + 50 : offset,
-            },
-          })
-          .then((resp) => resp.data);
+      if (queryData && queryData.businesses.length > 0) {
+        return queryData;
       }
 
-      return queryData;
+      const isDone =
+        queryData &&
+        queryData.offset + queryData.pageLength === queryData.total;
+      if (isDone) {
+        throw new Error("Done fetching");
+      }
+
+      return await axios
+        .get<StomaApiResponse>("/api/search", {
+          params: {
+            location: location,
+            offset: queryData ? queryData.offset + 50 : 0,
+          },
+        })
+        .then((resp) => resp.data);
     },
     {
       enabled: false,
@@ -47,26 +51,21 @@ const useFullResultsQuery = (location: string, offset: number) => {
   );
 };
 
-export const useBusinessQuery = (location: string, offset: number) => {
+export const useBusinessQuery = (location: string) => {
   const queryClient = useQueryClient();
-  const fullResultsQuery = useFullResultsQuery(location, offset);
+  const fullResultsQuery = useFullResultsQuery(location);
 
   const locationKey = getLocationKey(location);
   const businessQuery = useQuery(
     ["single", location],
     async () => {
       const fullResult = await fullResultsQuery.refetch();
-      const hasData =
-        !fullResult.error &&
-        fullResult.data !== undefined &&
-        fullResult.data.businesses.length > 0;
 
-      if (!hasData) {
+      if (fullResult.error || !fullResult.data) {
         throw new Error("Cannot fetch more data");
       }
 
-      const fullResultData = fullResult.data;
-      const businesses = fullResultData!.businesses;
+      const businesses = fullResult.data.businesses;
       return businesses[Math.floor(Math.random() * businesses.length)];
     },
     {
@@ -76,9 +75,8 @@ export const useBusinessQuery = (location: string, offset: number) => {
       refetchOnReconnect: false,
       onSuccess: (data: StomaBusiness) => {
         const resultData = data;
-        console.log(resultData);
-        queryClient.setQueryData(locationKey, (data: any) => {
-          console.log(data);
+        queryClient.setQueryData<StomaApiResponse>(locationKey, (data: any) => {
+          // console.log(data);
           return {
             ...data,
             businesses: data?.businesses.filter(
