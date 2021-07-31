@@ -1,57 +1,47 @@
-import { Heading, Text } from "@chakra-ui/layout";
-import {
-  Button,
-  Image,
-  Spinner,
-  VStack,
-  AspectRatio,
-  Link,
-} from "@chakra-ui/react";
-import React from "react";
+import { Box, Flex, Heading, HStack } from "@chakra-ui/layout";
+import { Button, Spinner, VStack, Link, ScaleFade } from "@chakra-ui/react";
 import { useParams } from "react-router";
 import { useHistory } from "react-router-dom";
 import Layout from "../components/Layout";
+import { MobileResultBody } from "../components/MobileResultBody";
 import { useBusinessQuery } from "../hooks/useBusinessQuery";
 
 const Result = () => {
   const { location } = useParams() as any;
   const history = useHistory();
-  const businessesQuery = useBusinessQuery(location);
-  const business = businessesQuery?.data;
+  const businessQuery = useBusinessQuery(location);
+  const business = businessQuery?.data;
 
-  if (businessesQuery.isLoading) {
+  if (businessQuery.isLoading) {
     return <Spinner colorScheme="blue" size="xl"></Spinner>;
   }
+  console.log(business);
 
   return (
     <Layout>
-      {!business ? (
-        <Text>No result</Text>
-      ) : (
-        <VStack>
-          <Heading>{business.name}</Heading>
-          <Text>Rating: {business.rating}</Text>
-          <Text>Price: {business.priceRating}</Text>
-          <AspectRatio minW="500px" maxW="500px" ratio={16 / 9}>
-            <Image src={business.imgUrl} alt={`${business.name} image`} />
-          </AspectRatio>
+      {!business || businessQuery.error ? (
+        <VStack textAlign="center">
+          <Heading>No Results... Try a Different Location...</Heading>
         </VStack>
+      ) : (
+        <Box align="center">
+          <MobileResultBody business={business} />
+        </Box>
       )}
-      <Button
-        mt={10}
-        colorScheme="blue"
-        isLoading={businessesQuery.isLoading}
-        onClick={() => businessesQuery.refetch()}>
-        Next
-      </Button>
-      <Button
-        mt={10}
-        as={Link}
-        colorScheme="blue"
-        isLoading={businessesQuery.isLoading}
-        onClick={() => history.push("/search")}>
-        Switch Location
-      </Button>
+      <HStack align="center" mt={10}>
+        <Button
+          colorScheme="red"
+          isLoading={businessQuery.isLoading}
+          onClick={() => history.push("/")}>
+          Switch Location
+        </Button>
+        <Button
+          colorScheme="red"
+          isLoading={businessQuery.isLoading}
+          onClick={() => businessQuery.refetch()}>
+          Next
+        </Button>
+      </HStack>
     </Layout>
   );
 };

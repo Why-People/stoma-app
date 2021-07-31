@@ -1,8 +1,8 @@
-import { YelpBusiness } from "./yelpTypes";
+import { Center, YelpBusiness } from "./yelpTypes";
 
 export enum StomaPriceRating {
   Cheap = "Cheap",
-  Middling = "Middling",
+  Middling = "Affordable",
   Expensive = "Expensive",
   VeryExpensive = "Very Expensive",
 }
@@ -28,12 +28,15 @@ export interface StomaErrorResponse {
 
 export interface StomaBusiness {
   yelpId: string;
+  yelpUrl: string;
   name: string;
   address: string[];
   categories: string[];
   transactions: string[];
   priceRating: StomaPriceRating | null;
+  coordinates: Center;
   phone: string | null;
   rating: number;
+  reviewCount: number;
   imgUrl: string;
 }

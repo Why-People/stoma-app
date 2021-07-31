@@ -9,7 +9,7 @@ import { YelpApiResponse, YelpBusiness, YelpPrice } from "./yelpTypes";
 require("dotenv").config();
 
 const corsConfig = {
-  origin: "http://localhost:3000",
+  origin: process.env.CORS_ORIGIN,
 };
 
 const app = express();
@@ -21,7 +21,7 @@ app.use(router);
 const port = process.env.SERVER_PORT;
 
 const maxBusinesses = 1000; // Yelp only allows upto 1000 results to be fetched through pagination
-const cacheTime = 1 * 60 * 20; // 20 minutes
+const cacheTime = 60 * 20; // 20 minutes
 
 axios.defaults.headers["Authorization"] = `Bearer ${process.env.YELP_KEY}`;
 axios.defaults.params = {
@@ -52,13 +52,16 @@ const formatRestaurantListing = (yelpBusiness: YelpBusiness) => {
   // Stop the snake case apocalypse
   return {
     yelpId: yelpBusiness.id,
+    yelpUrl: yelpBusiness.url,
     name: yelpBusiness.name,
     address: yelpBusiness.location.display_address,
     categories: categories,
     transactions: yelpBusiness.transactions,
     priceRating: priceRating,
+    coordinates: yelpBusiness.coordinates,
     phone: yelpBusiness.display_phone,
     rating: yelpBusiness.rating,
+    reviewCount: yelpBusiness.review_count,
     imgUrl: yelpBusiness.image_url,
   };
 };
@@ -67,11 +70,12 @@ const getCacheKey = (location: string, offset: number) => {
   // Try to make "very" similar keys match
   // Eg. A user may input "san francisco" another may input "San Francisco"
   // Those 2 keys would return the same response, so only 1 cache key is needed for both
-  const locationKey = location.replace(/[ ]+/, "_").toLowerCase();
+  const locationKey = location.replace(/[ ,]+/g, "_").toLowerCase();
   return `remainingBusinesses::${locationKey}::${offset}`;
 };
 
 const fetchStomaData = async (location: string, offset: number) => {
+  if (offset === maxBusinesses) throw new Error("Maximum Offset exceeded");
   const cacheKey = getCacheKey(location, offset);
   // Try to get from cache
   const cachedData = await redis.get(cacheKey);
@@ -99,7 +103,6 @@ const fetchStomaData = async (location: string, offset: number) => {
 
   // Cache data for 10 minutes
   await redis.set(cacheKey, JSON.stringify(stomaData), "ex", cacheTime);
-
   return stomaData;
 };
 
@@ -116,8 +119,6 @@ router.get(
         .status(400)
         .json({ message: "Invalid Request Params", errors: errors.array() });
     }
-
-    console.log("req");
 
     const location = req.query.location as string;
     const offset = req.query.offset as string;

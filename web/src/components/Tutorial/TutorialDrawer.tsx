@@ -14,19 +14,13 @@ import { TutorialFooter } from "./TutorialFooter";
 interface TutorialDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  closeRef: RefObject<any> | undefined;
 }
 
-export const TutorialDrawer = ({
-  isOpen,
-  onClose,
-  closeRef,
-}: TutorialDrawerProps) => {
+export const TutorialDrawer = ({ isOpen, onClose }: TutorialDrawerProps) => {
   const closeTutorial = useCloseTutorial(onClose);
   return (
     <Drawer
       placement="bottom"
-      finalFocusRef={closeRef}
       onClose={closeTutorial}
       isOpen={isOpen}
       size="3xl">

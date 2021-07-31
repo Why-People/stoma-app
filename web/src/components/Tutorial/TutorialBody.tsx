@@ -43,7 +43,8 @@ export const TutorialBody = () => {
       {progress === 1 && (
         <Stack direction="column">
           <Text>
-            First, input the location you want to find places to eat in.
+            First, input the location you wish to eat in. Then press enter or
+            click the search icon to find places to eat.
           </Text>
         </Stack>
       )}

@@ -5,7 +5,7 @@ interface BackgroundProps {
   particles: number;
 }
 
-export const Background: React.FC<BackgroundProps> = ({ particles }) => {
+const Background: React.FC<BackgroundProps> = ({ particles }) => {
   return (
     <React.Fragment>
       {Array.from({ length: particles }, (_, i) => (
@@ -14,3 +14,5 @@ export const Background: React.FC<BackgroundProps> = ({ particles }) => {
     </React.Fragment>
   );
 };
+
+export default Background;

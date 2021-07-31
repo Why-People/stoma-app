@@ -1,26 +1,19 @@
-import { SearchIcon } from "@chakra-ui/icons";
 import {
   Stack,
-  Heading,
   FormControl,
   FormLabel,
-  Input,
   FormErrorMessage,
   Button,
-  useColorMode,
-  InputGroup,
-  InputRightElement,
-  IconButton,
-  Center,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { Formik, Form, Field, FieldProps } from "formik";
-import React from "react";
+import { RefObject, useRef } from "react";
 import { useHistory } from "react-router-dom";
+import { InputField } from "./InputField";
+import { Tutorial } from "./Tutorial/Tutorial";
 
 export const SearchForm = () => {
-  const { colorMode } = useColorMode();
   const history = useHistory();
-  const inputBg = colorMode === "dark" ? "transparent" : "white";
   return (
     <Formik
       initialValues={{ location: "" }}
@@ -36,52 +29,18 @@ export const SearchForm = () => {
         <Form>
           <Stack align="center" justify="center" spacing={4}>
             <Field name="location">
-              {({ field, form }: FieldProps) => {
-                // console.log(field, form);
-                return (
-                  <FormControl
-                    size="lg"
-                    w={["260px", "350px", "400px", "450px", "500px", "550px"]}
-                    isInvalid={!!form.errors.location}>
-                    <FormLabel htmlFor="location"></FormLabel>
-                    <Center>
-                      <InputGroup align="center" justify="center">
-                        <Input
-                          {...field}
-                          bg={inputBg}
-                          id="location"
-                          h={["50px", "55px", "55px", "60px", "60px", "60px"]}
-                          fontSize={[
-                            "20px",
-                            "22px",
-                            "22px",
-                            "25px",
-                            "25px",
-                            "25px",
-                          ]}
-                          placeholder="Enter a Location, City, or Address"
-                        />
-
-                        {/* <InputRightElement align="center" justify="center">
-                          <IconButton
-                            // mt="10px"
-                            align="center"
-                            justify="center"
-                            aria-label="Find place to eat"
-                            icon={<SearchIcon />}
-                          />
-                          
-                        </InputRightElement> */}
-                      </InputGroup>
-                    </Center>
-                    <FormErrorMessage>{form.errors.location}</FormErrorMessage>
-                  </FormControl>
-                );
-              }}
+              {({ field, form }: FieldProps) => (
+                <FormControl isInvalid={!!form.errors.location}>
+                  <FormLabel htmlFor="location"></FormLabel>
+                  <InputField
+                    id="location"
+                    placeholder="Enter a Location, City, or Address"
+                    {...field}
+                  />
+                  <FormErrorMessage>{form.errors.location}</FormErrorMessage>
+                </FormControl>
+              )}
             </Field>
-            {/* <Button mt={4} w="50%" colorScheme="blue" type="submit">
-              Find Places to Eat
-            </Button> */}
           </Stack>
         </Form>
       )}

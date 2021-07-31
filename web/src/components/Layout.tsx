@@ -3,12 +3,7 @@ import React from "react";
 
 const Layout: React.FC = ({ children }) => {
   return (
-    <Flex
-      align="center"
-      justify="center"
-      direction="column"
-      // maxW="95%"
-      minH="70vh">
+    <Flex align="center" justify="center" direction="column" mb={5} minH="70vh">
       {children}
     </Flex>
   );

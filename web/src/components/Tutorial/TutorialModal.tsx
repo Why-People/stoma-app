@@ -15,22 +15,16 @@ import { TutorialFooter } from "./TutorialFooter";
 interface TutorialModalProps {
   isOpen: boolean;
   onClose: () => void;
-  closeRef: RefObject<any> | undefined;
 }
 
 export const TutorialModal: React.FC<TutorialModalProps> = ({
   isOpen,
   onClose,
-  closeRef,
 }: TutorialModalProps) => {
   const closeTutorial = useCloseTutorial(onClose);
 
   return (
-    <Modal
-      finalFocusRef={closeRef}
-      isOpen={isOpen}
-      onClose={closeTutorial}
-      size="xl">
+    <Modal isOpen={isOpen} onClose={onClose} size="xl">
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>How It Works</ModalHeader>
