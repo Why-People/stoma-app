@@ -11,7 +11,7 @@ export const TutorialFooter: React.FC<TutorialFooterProps> = ({
 }: TutorialFooterProps) => {
   const { progress } = useContext(TutorialContext);
   return (
-    <Button colorScheme="blue" onClick={onClose}>
+    <Button colorScheme="red" onClick={onClose}>
       {progress === 3 ? "Start Searching" : "Cancel"}
     </Button>
   );

@@ -9,10 +9,10 @@ interface TutorialProps {
   onClose: () => void;
 }
 export const Tutorial: React.FC<TutorialProps> = ({ isOpen, onClose }) => {
-  const [isLargerThan769] = useMediaQuery("(min-width: 769px)");
+  const [isLargerThan768] = useMediaQuery("(min-width: 768px)");
   return (
     <TutorialContextProvider>
-      {isLargerThan769 ? (
+      {isLargerThan768 ? (
         <TutorialModal isOpen={isOpen} onClose={onClose} />
       ) : (
         <TutorialDrawer isOpen={isOpen} onClose={onClose} />

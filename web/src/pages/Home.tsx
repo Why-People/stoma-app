@@ -8,16 +8,21 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
-import React, { RefObject, useRef } from "react";
+import React from "react";
 import { SearchForm } from "../components/SearchForm";
 import { Tutorial } from "../components/Tutorial/Tutorial";
+import { useImagePreloader } from "../hooks/useImagePreloader";
+import { useIsDarkMode } from "../hooks/useIsDarkMode";
+import { getTutorialImages } from "../lib/utils";
 
 const Home: React.FC = () => {
-  const { colorMode, toggleColorMode } = useColorMode();
-  const [isLargerThan300] = useMediaQuery("(min-width: 300px)");
+  const { toggleColorMode } = useColorMode();
+  const [isLargerThan300] = useMediaQuery("(min-width: 300px)"); // Handle Small mobile devices
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const isDarkMode = useIsDarkMode();
 
-  const isDarkMode = colorMode === "dark";
+  // useImagePreloader(getTutorialImages());
+
   return (
     <Stack maxW="95%" align="center" textAlign="center">
       <Heading fontSize={["85px", "95px", "100px", "105px", "110px", "120px"]}>
@@ -44,7 +49,7 @@ const Home: React.FC = () => {
             {isDarkMode ? "Betray 😡" : "Join 😊"} the Dark Side
           </Text>
         </Stack>
-        <Button colorScheme="blue" onClick={onOpen}>
+        <Button colorScheme="red" w="220px" size="lg" onClick={onOpen}>
           How It Works
         </Button>
       </VStack>

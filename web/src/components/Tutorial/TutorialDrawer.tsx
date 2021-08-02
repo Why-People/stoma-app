@@ -1,13 +1,15 @@
 import {
+  Box,
   Drawer,
   DrawerBody,
+  DrawerCloseButton,
   DrawerContent,
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
+  Spacer,
 } from "@chakra-ui/react";
-import { RefObject } from "react";
-import { useCloseTutorial } from "./hooks/useCloseTutorial";
+import React from "react";
 import { TutorialBody } from "./TutorialBody";
 import { TutorialFooter } from "./TutorialFooter";
 
@@ -17,21 +19,17 @@ interface TutorialDrawerProps {
 }
 
 export const TutorialDrawer = ({ isOpen, onClose }: TutorialDrawerProps) => {
-  const closeTutorial = useCloseTutorial(onClose);
   return (
-    <Drawer
-      placement="bottom"
-      onClose={closeTutorial}
-      isOpen={isOpen}
-      size="3xl">
+    <Drawer placement="bottom" onClose={onClose} isOpen={isOpen} size="6xl">
       <DrawerOverlay />
       <DrawerContent>
         <DrawerHeader>How It Works</DrawerHeader>
+        <DrawerCloseButton />
         <DrawerBody>
           <TutorialBody />
         </DrawerBody>
         <DrawerFooter>
-          <TutorialFooter onClose={closeTutorial} />
+          <TutorialFooter onClose={onClose} />
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

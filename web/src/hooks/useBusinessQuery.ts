@@ -6,7 +6,7 @@ const getLocationKey = (location: string) => {
   return [
     "location",
     location
-      .replace(/[[\]|{}^`"<>\\]+/, "")
+      .replace(/[[\]|{}^`"<>\\]+/g, "")
       .replace(/[ ,]+/g, "_")
       .toLowerCase(),
   ];
@@ -76,7 +76,6 @@ export const useBusinessQuery = (location: string) => {
       onSuccess: (data: StomaBusiness) => {
         const resultData = data;
         queryClient.setQueryData<StomaApiResponse>(locationKey, (data: any) => {
-          // console.log(data);
           return {
             ...data,
             businesses: data?.businesses.filter(

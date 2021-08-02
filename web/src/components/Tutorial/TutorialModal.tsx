@@ -8,7 +8,6 @@ import {
   ModalOverlay,
 } from "@chakra-ui/modal";
 import React, { RefObject } from "react";
-import { useCloseTutorial } from "./hooks/useCloseTutorial";
 import { TutorialBody } from "./TutorialBody";
 import { TutorialFooter } from "./TutorialFooter";
 
@@ -21,8 +20,6 @@ export const TutorialModal: React.FC<TutorialModalProps> = ({
   isOpen,
   onClose,
 }: TutorialModalProps) => {
-  const closeTutorial = useCloseTutorial(onClose);
-
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl">
       <ModalOverlay />
@@ -33,7 +30,7 @@ export const TutorialModal: React.FC<TutorialModalProps> = ({
           <TutorialBody />
         </ModalBody>
         <ModalFooter>
-          <TutorialFooter onClose={closeTutorial} />
+          <TutorialFooter onClose={onClose} />
         </ModalFooter>
       </ModalContent>
     </Modal>

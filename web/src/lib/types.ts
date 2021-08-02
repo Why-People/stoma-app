@@ -1,12 +1,19 @@
-import Toggle from "./Toggle";
-
-export type UseToggleValue = [boolean, Toggle];
+export enum TutorialProgress {
+  Start = 1,
+  Middle = 2,
+  End = 3,
+}
 
 export type StomaData = StomaApiResponse | StomaErrorResponse;
 
 export interface Coordinates {
   latitude: number;
   longitude: number;
+}
+
+export interface GoogleMapsLocation {
+  address: string;
+  coordinates: Coordinates;
 }
 
 export interface StomaApiResponse {
