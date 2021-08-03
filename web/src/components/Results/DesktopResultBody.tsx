@@ -1,5 +1,4 @@
 import {
-  useMediaQuery,
   VStack,
   Heading,
   AspectRatio,
@@ -17,11 +16,11 @@ import { GoogleMaps } from "../GoogleMaps";
 import { Rating } from "../Rating";
 import { ResultTable } from "./ResultTable";
 
-interface DesktopResultBody {
+interface DesktopResultBodyProps {
   business: StomaBusiness;
 }
 
-export const DesktopResultBody: React.FC<DesktopResultBody> = ({
+export const DesktopResultBody: React.FC<DesktopResultBodyProps> = ({
   business,
 }) => {
   const displayAddress = business.address.join(", ");

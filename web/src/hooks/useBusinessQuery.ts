@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useQuery, useQueryClient } from "react-query";
+import { ImagePreloader } from "../lib/ImagePreloader";
 import { StomaApiResponse, StomaBusiness } from "../lib/types";
+import { useImagePreloader } from "./useImagePreloader";
 
 const getLocationKey = (location: string) => {
   return [
@@ -12,7 +14,25 @@ const getLocationKey = (location: string) => {
   ];
 };
 
+const fetchStomaDataFromServer = async (
+  location: string,
+  offset: number,
+  imagePreloader: ImagePreloader
+) => {
+  const stomaData = await axios
+    .get<StomaApiResponse>("/api/search", {
+      params: {
+        location: location,
+        offset: offset,
+      },
+    })
+    .then((resp) => resp.data);
+  imagePreloader.preloadImages(stomaData.businesses.map((b) => b.imgUrl));
+  return stomaData;
+};
+
 const useFullResultsQuery = (location: string) => {
+  const imagePreloader = useImagePreloader(undefined);
   const queryClient = useQueryClient();
   const locationKey = getLocationKey(location);
   return useQuery(
@@ -32,14 +52,11 @@ const useFullResultsQuery = (location: string) => {
         throw new Error("Done fetching");
       }
 
-      return await axios
-        .get<StomaApiResponse>("/api/search", {
-          params: {
-            location: location,
-            offset: queryData ? queryData.offset + 50 : 0,
-          },
-        })
-        .then((resp) => resp.data);
+      return await fetchStomaDataFromServer(
+        location,
+        queryData ? queryData.offset + 50 : 0,
+        imagePreloader
+      );
     },
     {
       enabled: false,

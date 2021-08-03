@@ -1,4 +1,4 @@
-import { HStack, Button, VStack, Icon, Text } from "@chakra-ui/react";
+import { HStack, Button, Icon, Text } from "@chakra-ui/react";
 import React from "react";
 import { HiOutlineArrowRight } from "react-icons/hi";
 import { ImLocation } from "react-icons/im";

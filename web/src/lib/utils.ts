@@ -26,20 +26,40 @@ export const formatTransactions = (transactions: string[]) => {
     .join(" • ");
 };
 
-const baseImgBucketUrl = "https://storage.googleapis.com/stoma-assets";
-
-export const getTutorialImages = () => {
-  // TODO: Do this better tommorow
-  return [
-    baseImgBucketUrl + "/DarkModeListing.png",
-    baseImgBucketUrl + "/DarkModeListingMobile.png",
-    baseImgBucketUrl + "/DarkModeNewLocation.png",
-    baseImgBucketUrl + "/DarkModeNewLocationMobile.png",
-    baseImgBucketUrl + "/DarkModeSearch.png",
-    baseImgBucketUrl + "/LightModeListing.png",
-    baseImgBucketUrl + "/LightModeListingMobile.png",
-    baseImgBucketUrl + "/LightModeNewLocation.png",
-    baseImgBucketUrl + "/LightModeNewLocationMobile.png",
-    baseImgBucketUrl + "/LightModeSearch.png",
+export const getTutorialImages = (isDarkMode: boolean, isMobile: boolean) => {
+  const imgs = [
+    "DarkModeListing.png",
+    "DarkModeListingMobile.png",
+    "DarkModeNewLocation.png",
+    "DarkModeNewLocationMobile.png",
+    "DarkModeSearch.png",
+    "LightModeListing.png",
+    "LightModeListingMobile.png",
+    "LightModeNewLocation.png",
+    "LightModeNewLocationMobile.png",
+    "LightModeSearch.png",
   ];
+  const tutorialImages: string[] = [];
+
+  imgs.forEach((img) => {
+    const isProperColorMode =
+      (img.startsWith("DarkMode") && isDarkMode) ||
+      (img.startsWith("LightMode") && !isDarkMode);
+    if (!isProperColorMode) return;
+
+    if (img.includes("Search")) {
+      tutorialImages.push(img);
+      return;
+    }
+
+    const isProperDevice =
+      (img.includes("Mobile") || isMobile) &&
+      (!img.includes("Mobile") || !isMobile);
+
+    if (isProperDevice) {
+      tutorialImages.push(img);
+    }
+  });
+
+  return tutorialImages;
 };

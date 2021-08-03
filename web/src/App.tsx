@@ -10,10 +10,9 @@ import "@fontsource/raleway/700.css";
 import "@fontsource/open-sans/700.css";
 import { ChakraProvider, extendTheme, Spinner } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "react-query";
-import React, { lazy, Suspense } from "react";
+import { lazy, Suspense } from "react";
 import Layout from "./components/Layout";
 import Background from "./components/Background";
-import { PreloadedImagesProvider } from "./components/PreloadedImagesProvider";
 
 const Home = lazy(() => import("./pages/Home"));
 const Result = lazy(() => import("./pages/Result"));
@@ -53,11 +52,9 @@ const App = () => {
   return (
     <ChakraProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
-        <PreloadedImagesProvider>
-          <Router>
-            <AppBody />
-          </Router>
-        </PreloadedImagesProvider>
+        <Router>
+          <AppBody />
+        </Router>
       </QueryClientProvider>
     </ChakraProvider>
   );

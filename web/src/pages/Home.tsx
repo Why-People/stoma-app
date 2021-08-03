@@ -8,20 +8,29 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { SearchForm } from "../components/SearchForm";
 import { Tutorial } from "../components/Tutorial/Tutorial";
 import { useImagePreloader } from "../hooks/useImagePreloader";
 import { useIsDarkMode } from "../hooks/useIsDarkMode";
 import { getTutorialImages } from "../lib/utils";
 
+const baseImgBucketUrl = "https://storage.googleapis.com/stoma-assets";
+
 const Home: React.FC = () => {
   const { toggleColorMode } = useColorMode();
   const [isLargerThan300] = useMediaQuery("(min-width: 300px)"); // Handle Small mobile devices
+  const [isLargerThan768] = useMediaQuery("(min-width: 768px)");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const isDarkMode = useIsDarkMode();
+  const imagePreloader = useImagePreloader(baseImgBucketUrl);
 
-  // useImagePreloader(getTutorialImages());
+  // Preload Tutorial Images
+  useEffect(() => {
+    imagePreloader.preloadImages(
+      getTutorialImages(isDarkMode, isLargerThan768)
+    );
+  }, [imagePreloader, isDarkMode, isLargerThan768]);
 
   return (
     <Stack maxW="95%" align="center" textAlign="center">

@@ -7,7 +7,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/modal";
-import React, { RefObject } from "react";
+import React from "react";
 import { TutorialBody } from "./TutorialBody";
 import { TutorialFooter } from "./TutorialFooter";
 

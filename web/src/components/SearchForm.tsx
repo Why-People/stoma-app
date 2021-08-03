@@ -3,14 +3,10 @@ import {
   FormControl,
   FormLabel,
   FormErrorMessage,
-  Button,
-  useDisclosure,
 } from "@chakra-ui/react";
 import { Formik, Form, Field, FieldProps } from "formik";
-import { RefObject, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import { InputField } from "./InputField";
-import { Tutorial } from "./Tutorial/Tutorial";
 
 export const SearchForm = () => {
   const history = useHistory();

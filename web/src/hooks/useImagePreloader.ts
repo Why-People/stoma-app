@@ -1,16 +1,7 @@
-import { useEffect } from "react";
-import { usePreloadedImages } from "./usePreloadedImages";
+import { useRef } from "react";
+import { ImagePreloader } from "../lib/ImagePreloader";
 
-export const useImagePreloader = (src: string[]) => {
-  const { setSrc } = usePreloadedImages();
-
-  useEffect(() => {
-    if (!setSrc) return;
-    console.log("Preloading Images");
-    src.forEach((s) => {
-      const img = new Image();
-      img.src = s;
-    });
-    setSrc(src);
-  }, [src]);
+export const useImagePreloader = (baseUrl: string | undefined) => {
+  const imagePreloaderRef = useRef(new ImagePreloader(baseUrl));
+  return imagePreloaderRef.current;
 };

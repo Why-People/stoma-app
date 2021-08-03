@@ -1,5 +1,5 @@
 import { useMediaQuery } from "@chakra-ui/react";
-import React, { RefObject } from "react";
+import React from "react";
 import { TutorialContextProvider } from "./TutorialContextProvider";
 import { TutorialDrawer } from "./TutorialDrawer";
 import { TutorialModal } from "./TutorialModal";
