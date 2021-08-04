@@ -6,8 +6,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import "./App.css";
-// import "@fontsource/raleway/700.css";
-// import "@fontsource/open-sans/700.css";
+import "@fontsource/raleway/700.css";
 import { ChakraProvider, extendTheme, Spinner } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { lazy, Suspense } from "react";
@@ -21,10 +20,10 @@ const NotFound404 = lazy(() => import("./pages/NotFound404"));
 axios.defaults.baseURL = process.env.REACT_APP_STOMA_API_BASE_URL;
 
 const theme = extendTheme({
-  // fonts: {
-  //   heading: "Raleway",
-  //   body: "Raleway",
-  // },
+  fonts: {
+    heading: "Raleway",
+    body: "Raleway",
+  },
 });
 
 const queryClient = new QueryClient();
