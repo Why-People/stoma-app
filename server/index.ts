@@ -133,5 +133,6 @@ router.get(
 );
 
 app.listen(port, () => {
+  console.log(process.env.CORS_ORIGIN);
   console.log(`Stoma Server started on port ${port}`);
 });
