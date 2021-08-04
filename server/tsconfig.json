@@ -1,18 +1,22 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": ["dom", "es6", "es2017", "esnext.asynciterable"],
     "rootDir": "./",
-    "allowJs": true,
     "skipLibCheck": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "allowJs": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true
-  }
+    "baseUrl": "."
+  },
+  "exclude": ["node_modules"],
+  "include": ["*.tsx", "*.ts"],
+  "files": ["index.ts"]
 }

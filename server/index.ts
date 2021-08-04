@@ -13,11 +13,9 @@ const corsConfig = {
 };
 
 const app = express();
-// const corsObj = cors(corsConfig);
 const router = Router();
 const redis = new Redis(process.env.REDIS_URL);
 app.use(router);
-// app.use(corsObj);
 const port = process.env.SERVER_PORT;
 
 const maxBusinesses = 1000; // Yelp only allows upto 1000 results to be fetched through pagination
