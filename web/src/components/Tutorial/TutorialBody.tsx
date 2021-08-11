@@ -8,7 +8,6 @@ import {
   Text,
   Image,
   useMediaQuery,
-  Spinner,
 } from "@chakra-ui/react";
 import React, { useContext } from "react";
 import { useIsDarkMode } from "../../hooks/useIsDarkMode";
@@ -29,13 +28,9 @@ const TutorialBodyContent: React.FC<TutorialBodyContentProps> = ({
   return (
     <Stack direction="column">
       <Text>{text}</Text>
-      {imgUrls?.map((imgUrl) => (
+      {imgUrls?.map((imgUrl, i) => (
         <Image
-          fallback={
-            <Flex align="center" justify="center">
-              <Spinner colorScheme="red" />
-            </Flex>
-          }
+          key={i}
           borderRadius="10px"
           boxShadow="xl"
           src={`${baseImgBucketUrl}/${imgUrl}`}
@@ -52,7 +47,7 @@ export const TutorialBody = () => {
   const isDarkMode = useIsDarkMode();
 
   return (
-    <Stack direction="column" mb={10}>
+    <Stack direction="column" mb={7}>
       <Flex justify="space-between">
         <ScaleFade in={progress > 1}>
           <IconButton

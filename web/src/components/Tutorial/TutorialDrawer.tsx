@@ -1,4 +1,5 @@
 import {
+  Box,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
@@ -17,13 +18,15 @@ interface TutorialDrawerProps {
 
 export const TutorialDrawer = ({ isOpen, onClose }: TutorialDrawerProps) => {
   return (
-    <Drawer placement="bottom" onClose={onClose} isOpen={isOpen} size="6xl">
+    <Drawer placement="bottom" onClose={onClose} isOpen={isOpen} size="3xl">
       <DrawerOverlay />
       <DrawerContent>
         <DrawerHeader>How It Works</DrawerHeader>
         <DrawerCloseButton />
         <DrawerBody>
-          <TutorialBody />
+          <Box maxH="50vh" mb={2}>
+            <TutorialBody />
+          </Box>
         </DrawerBody>
         <DrawerFooter>
           <TutorialFooter onClose={onClose} />

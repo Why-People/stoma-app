@@ -5,7 +5,6 @@ import {
   Route,
   useLocation,
 } from "react-router-dom";
-import "./App.css";
 import "@fontsource/raleway/700.css";
 import { ChakraProvider, extendTheme, Spinner } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "react-query";
