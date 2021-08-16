@@ -6,7 +6,7 @@ import axios from "axios";
 import { StomaApiResponse, StomaPriceRating } from "./types";
 import Redis from "ioredis";
 import { YelpApiResponse, YelpBusiness, YelpPrice } from "./yelpTypes";
-require("dotenv").config();
+require("dotenv").config(); 
 
 const corsConfig = {
   origin: process.env.CORS_ORIGIN,
@@ -47,7 +47,6 @@ const formatRestaurantListing = (yelpBusiness: YelpBusiness) => {
   );
   const priceRating = getPriceRating(yelpBusiness.price);
 
-  // Stop the snake case apocalypse
   return {
     yelpId: yelpBusiness.id,
     yelpUrl: yelpBusiness.url,
@@ -95,7 +94,7 @@ const fetchStomaData = async (location: string, offset: number) => {
       formatRestaurantListing(yelpBusiness)
     ),
     pageLength: yelpData.businesses.length,
-    total: yelpData.total > maxBusinesses ? maxBusinesses : yelpData.total,
+    total: Math.min(maxBusinesses, yelpData.total),
     offset: offset,
   };
 
